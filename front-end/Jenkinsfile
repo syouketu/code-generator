@@ -1,0 +1,40 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('准备阶段') {
+             steps {
+                script{
+                    sh("ls -al ${env.WORKSPACE}")
+					deleteDir()  // clean up current work directory
+					sh("ls -al ${env.WORKSPACE}")
+                }
+             }
+        }
+
+        stage('下载代码') {
+            steps {
+                script {
+                    git branch: '58suo', credentialsId: '37c9366b-5cc4-4312-be20-c81c8f911fab', url: 'https://gitee.com/syouketu/code-generator.git'
+                }
+            }
+        }
+
+        stage('构建Docker镜像') {
+            steps {
+                sh '''
+                cd ./front-end
+                docker build -t 192.168.11.105:5000/ivm/code-generator-web --build-arg PROFILE=test .
+                docker push 192.168.11.105:5000/ivm/code-generator-web
+                '''
+            }
+        }
+
+        stage('部署到集群') {
+            steps {
+                echo '部署镜像到开发环境'
+                rancherRedeploy alwaysPull: true, credential: 'Rancher2', images: '', workload: '/project/c-sxxln:p-hzpzk/workloads/deployment:common:code-generator-web'
+            }
+        }
+    }
+}

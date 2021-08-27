@@ -1,0 +1,11 @@
+#back-end
+back-end/.idea_modules/
+back-end/*.iml
+back-end/.idea/
+back-end/target/
+
+#front-end
+front-end/node_modules/
+front-end/dist/
+
+.idea

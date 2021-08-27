@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.syouketu.modules.project.mapper.DatabaseMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.syouketu.modules.project.entity.Database">
+        <id column="id" property="id"/>
+        <result column="project_id" property="projectId"/>
+        <result column="name" property="name"/>
+        <result column="url" property="url"/>
+        <result column="user" property="user"/>
+        <result column="passwd" property="passwd"/>
+        <result column="db_schema" property="dbSchema"/>
+        <result column="db_type" property="dbType"/>
+        <result column="driver" property="driver"/>
+    </resultMap>
+
+    <resultMap id="DatabaseView" type="com.syouketu.modules.project.dto.output.DatabaseView" extends="BaseResultMap">
+        <result column="project" property="project"/>
+    </resultMap>
+
+    <select id="selectDatabases" resultMap="DatabaseView">
+        SELECT d.*,
+        p.name AS 'project'
+        FROM pj_database d
+        LEFT JOIN pj_project p ON d.project_id = p.id
+        WHERE 1 = 1
+        <if test="filter.id!=null">
+            AND d.id = #{filter.id}
+        </if>
+        <if test="filter.projectId!=null">
+            AND d.project_id = #{filter.projectId}
+        </if>
+        ORDER BY d.id DESC
+    </select>
+
+    <select id="selectByName" resultMap="BaseResultMap">
+        SELECT *
+        FROM pj_database
+        WHERE name = #{dbName}
+    </select>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.syouketu.modules.project.mapper.ProjectMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.syouketu.modules.project.entity.Project">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="parent_package" property="parentPackage" />
+		<result column="module_name" property="moduleName" />
+		<result column="entity" property="entity" />
+		<result column="service" property="service" />
+		<result column="service_impl" property="serviceImpl" />
+		<result column="mapper" property="mapper" />
+		<result column="mapper_xml" property="mapperXml" />
+		<result column="controller" property="controller" />
+		<result column="date_add" property="dateAdd" />
+		<result column="date_modify" property="dateModify" />
+	</resultMap>
+
+
+    <select id="selectProjects" resultMap="BaseResultMap">
+        SELECT
+             *
+        FROM pj_project
+        WHERE
+             1 = 1
+        <if test="filter.id!=null and filter.id!=''">
+            AND	id = #{filter.id}
+        </if>
+        ORDER BY id DESC
+    </select>
+</mapper>
